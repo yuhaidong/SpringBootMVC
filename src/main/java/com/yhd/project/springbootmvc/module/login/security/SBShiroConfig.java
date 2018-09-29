@@ -64,7 +64,7 @@ public class SBShiroConfig {
 	 * 由于我们的密码校验交给Shiro的SimpleAuthenticationInfo进行处理了,
 	 * 所以我们需要修改下doGetAuthenticationInfo中的代码;
 	 * 
-	 * 可以扩展凭证匹配器，实现 输入密码错误次数后锁定等功能，下一次
+	 * 可以扩展凭证匹配器，实现输入密码错误次数后锁定等功能，下一次
 	 * 
 	 * @return
 	 */
@@ -96,7 +96,9 @@ public class SBShiroConfig {
 	@Bean
 	public SBAuthorizingRealm myShiroRealm(){
 		
+		// 创建Realm对象
 		SBAuthorizingRealm myShiroRealm = new SBAuthorizingRealm();
+		// 设置密码匹配器，是自定义的
 		myShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
 //		myShiroRealm.setCredentialsMatcher(sbMatcher());
 		
@@ -120,6 +122,7 @@ public class SBShiroConfig {
 	/**
 	 *  开启shiro aop注解支持.
 	 *  使用代理方式;所以需要开启代码支持;
+	 *  
 	 * @param securityManager
 	 * @return
 	 */

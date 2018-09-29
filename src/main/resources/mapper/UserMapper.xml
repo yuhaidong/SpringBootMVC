@@ -10,7 +10,9 @@
  
  
 	<select id="findByUserName" resultMap="BaseResultMap">
-		select id, login_name, password from sb_user;
+		select id, login_name, password 
+		from sb_user
+		where login_name = #{login_name}
 	</select>
 	
 </mapper>

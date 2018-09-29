@@ -21,19 +21,29 @@ public class WelcomeController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * 登录到首页
+	 * 
+	 * @param request
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/index")
 	public String index(HttpServletRequest request, ModelMap model) {
-		
-//		String userName = request.getAttribute("login_name").toString();
-		//String userName = request.getSession().getAttribute("login_name") + "";
-		
-		//if ("" != userName) {
-		//	model.addAttribute("userName", userName);
-		//}
 		
 		return "index";
 	}
 	
+	/**
+	 * 返回登录用户信息
+	 * 这里注解@ResponseBody是为了让函数返回对象，而不是跳转页面
+	 * 
+	 * @param request
+	 * @param response
+	 * @param userName
+	 * @param modelMap
+	 * @return
+	 */
 	@RequestMapping("/userlist")
 	@ResponseBody
 	public Map<String,Object> userlist(HttpServletRequest request,
@@ -45,7 +55,6 @@ public class WelcomeController {
 
 		Map<String,Object> map = new HashMap<>();
 		map.put("login_name", user.getLoginName());
-//		modelMap.addAttribute("login_name", login_name);
 		
 		return map;
 		

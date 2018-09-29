@@ -28,10 +28,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class LoginController {
 
+	/**
+	 * 登录页面
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/login", method= RequestMethod.GET)
 	public String login() {
-		
-		System.out.println("login - Get");
 		
 		return "login";
 	}

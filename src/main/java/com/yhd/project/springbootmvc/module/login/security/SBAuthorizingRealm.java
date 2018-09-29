@@ -37,16 +37,15 @@ public class SBAuthorizingRealm extends AuthorizingRealm {
 		System.out.println("执行认证逻辑");
 		
 		UsernamePasswordToken token = (UsernamePasswordToken) authToken;
-//		FlxoaUser flxoaUser = flxoaUserMng.findByUserName(token.getUsername());
 		User user = userService.findByUserName(token.getUsername());
 
 		if (user != null) {
 			
 			SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getLoginName(),
 					user.getPassword(), getName());
-			// 当验证都通过后，把用户信息放在session里
+			// 当验证都通过后，把用户信息放在session里，前段页面会调用
 	        Session session = SecurityUtils.getSubject().getSession();
-	        session.setAttribute("user", user);
+	        //session.setAttribute("user", user);
 	        session.setAttribute("username", user.getLoginName());
 			
 			return authenticationInfo;

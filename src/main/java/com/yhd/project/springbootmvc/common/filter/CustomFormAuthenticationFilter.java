@@ -80,6 +80,9 @@ public class CustomFormAuthenticationFilter extends FormAuthenticationFilter {
 	private boolean onLoginSuccess(AuthenticationToken token,boolean adminLogin,Subject subject,
 			ServletRequest request, ServletResponse response)
 			throws Exception {
+		
+		System.out.println("登陆成功！");
+		
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String username = (String) subject.getPrincipal();
@@ -149,9 +152,6 @@ public class CustomFormAuthenticationFilter extends FormAuthenticationFilter {
 		}
 		WebUtils.redirectToSavedRequest(req, res, successUrl);
 	}
-	
-//	@Autowired
-//	private ProjectmvcUserManager projectmvcUserManager;
 	
 	private String adminPrefix;
 	private String adminIndex;
