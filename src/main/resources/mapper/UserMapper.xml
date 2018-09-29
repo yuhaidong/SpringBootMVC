@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhd.project.springbootmvc.module.login.dao.UserMapper">
+ 
+	<resultMap id="BaseResultMap" type="com.yhd.project.springbootmvc.module.login.entity.User">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="login_name" jdbcType="VARCHAR" property="loginName" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+	</resultMap>
+ 
+ 
+	<select id="findByUserName" resultMap="BaseResultMap">
+		select id, login_name, password from sb_user;
+	</select>
+	
+</mapper>

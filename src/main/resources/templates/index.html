@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>内控系统</title>
+
+<script type="text/javascript"   th:src="@{/js/jquery-3.3.1.js}"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		
+		//页面刚加载时调用此异步方法，用来展示页面数据
+		$.ajax({
+			type : "POST",
+			url : "/userlist",
+			//		data : code,
+			success : callBackSuccess,
+			error : callBackError
+		});
+
+	});
+
+	//异步调用显示个人信息正确时
+	function callBackSuccess(data) {
+		//显示用户姓名
+		$('#displayName').text(data.login_name);
+		//显示备注信息
+		$("#text").text(data.description);
+	}
+
+	//异步调用显示个人信息错误时
+	function callBackError(XMLHttpRequest, textStatus, errorThrown) {
+		//调用错误
+		alert("error");
+		//显示错误信息
+		alert(XMLHttpRequest.readyState + XMLHttpRequest.status
+				+ XMLHttpRequest.responseText);
+	}
+</script>
+
+</head>
+<body>
+	<div>登陆成功！</div>
+	<table width="750" border="0" align="center" cellpadding="0"
+		cellspacing="0">
+		<tr>
+			<td>
+				<div style="width: 80px; border: 1px">用户姓名：</div>
+				<div style="width: 80px; border: 1px">备注信息：</div>
+			</td>
+			<td>
+				<div id="name">
+					<div id="displayName"
+						style="text-align: left; width: 500px; background: #def;">
+					</div>
+					
+					<div id="info">
+						<div id="text">
+							123
+						</div>
+					</div>	
+				</div>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>
