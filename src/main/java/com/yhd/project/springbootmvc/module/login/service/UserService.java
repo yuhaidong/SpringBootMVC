@@ -4,7 +4,7 @@ import com.yhd.project.springbootmvc.module.login.entity.User;
 
 public interface UserService {
 
-	public User findByUserName(String username);
+	public User findByAccount(String account);
 	
 //	public User updateUser(User user);
 }

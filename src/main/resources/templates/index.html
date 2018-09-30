@@ -24,7 +24,7 @@
 	//异步调用显示个人信息正确时
 	function callBackSuccess(data) {
 		//显示用户姓名
-		$('#displayName').text(data.login_name);
+		$('#displayName').text(data.displayName);
 		//显示备注信息
 		$("#text").text(data.description);
 	}

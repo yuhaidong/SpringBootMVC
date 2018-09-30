@@ -49,12 +49,12 @@ public class WelcomeController {
 	public Map<String,Object> userlist(HttpServletRequest request,
 			HttpServletResponse response, String userName, ModelMap modelMap) {
 
-		String login_name = request.getSession().getAttribute("username")
+		String account = request.getSession().getAttribute("account")
 				.toString();
-		User user = userService.findByUserName(login_name);
+		User user = userService.findByAccount(account);
 
 		Map<String,Object> map = new HashMap<>();
-		map.put("login_name", user.getLoginName());
+		map.put("account", user.getAccount());
 		
 		return map;
 		

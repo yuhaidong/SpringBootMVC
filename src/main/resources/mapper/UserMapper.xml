@@ -3,16 +3,19 @@
 <mapper namespace="com.yhd.project.springbootmvc.module.login.dao.UserMapper">
  
 	<resultMap id="BaseResultMap" type="com.yhd.project.springbootmvc.module.login.entity.User">
-		<id column="id" jdbcType="VARCHAR" property="id" />
-		<result column="login_name" jdbcType="VARCHAR" property="loginName" />
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
 		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="display_name" jdbcType="VARCHAR" property="displayName" />
+		<result column="discription" jdbcType="VARCHAR" property="discription" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
 	</resultMap>
  
  
 	<select id="findByUserName" resultMap="BaseResultMap">
 		select id, login_name, password 
 		from sb_user
-		where login_name = #{login_name}
+		where account = #{account}
 	</select>
 	
 </mapper>
