@@ -12,9 +12,10 @@
 	</resultMap>
  
  
-	<select id="findByUserName" resultMap="BaseResultMap">
-		select id, login_name, password 
-		from sb_user
+	<select id="findByAccount" resultMap="BaseResultMap">
+		select 
+			*
+		from mvc_user
 		where account = #{account}
 	</select>
 	

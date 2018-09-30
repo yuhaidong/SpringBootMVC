@@ -54,7 +54,7 @@ public class WelcomeController {
 		User user = userService.findByAccount(account);
 
 		Map<String,Object> map = new HashMap<>();
-		map.put("account", user.getAccount());
+		map.put("displayName", user.getDisplayName());
 		
 		return map;
 		

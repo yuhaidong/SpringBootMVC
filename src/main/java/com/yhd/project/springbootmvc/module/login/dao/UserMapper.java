@@ -6,5 +6,5 @@ public interface UserMapper {
 
 	public User findByAccount(String account);
 
-	public User updateUser(User user);
+//	public User updateUser(User user);
 }

@@ -46,7 +46,7 @@ public class SBAuthorizingRealm extends AuthorizingRealm {
 			// 当验证都通过后，把用户信息放在session里，前段页面会调用
 	        Session session = SecurityUtils.getSubject().getSession();
 	        //session.setAttribute("user", user);
-	        session.setAttribute("displayName", user.getDisplayName());
+	        session.setAttribute("account", user.getAccount());
 			
 			return authenticationInfo;
 		}
