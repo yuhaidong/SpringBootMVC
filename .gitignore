@@ -1,6 +1,7 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 
+### My ignore file ###
 *.DS_Store
 *.mwb.bak
 
