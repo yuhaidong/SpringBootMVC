@@ -11,10 +11,12 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
+import com.yhd.project.springbootmvc.common.filter.CaptchaValidateFilter;
 import com.yhd.project.springbootmvc.common.filter.CustomFormAuthenticationFilter;
 
 @Configuration
@@ -46,10 +48,17 @@ public class SBShiroConfig {
 
 		// 自定义拦截器
 		Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
+		// 登录权限验证拦截器
 		filtersMap.put("customFormAuthenticationFilter", new CustomFormAuthenticationFilter());
+		// 二维码验证拦截器
+		filtersMap.put("captchaValidateFilter", new CaptchaValidateFilter());
+		// 将自定义拦截器加入到shiro的Bean中
 		shiroFilterFactoryBean.setFilters(filtersMap);
-		// 将自定义的拦截器设置进shiro的filterchain中。必须设置！否则filter不会生效！
+		
+		// 将登录权限验证拦截器设置进shiro的filterchain中。必须设置！否则filter不会生效！
 		filterChainDefinitionMap.put("/**", "customFormAuthenticationFilter");
+		// 将二维码验证拦截器设置进shiro的filterchain中，必须设置！否则filter不会生效！
+		filterChainDefinitionMap.put("/**", "captchaValidateFilter");
 
 		//未授权界面;
 		shiroFilterFactoryBean.setUnauthorizedUrl("/403");
