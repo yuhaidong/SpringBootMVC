@@ -48,6 +48,7 @@ public class CaptchaValidateFilter extends AccessControlFilter {
 		//如果验证码失败了，存储失败key属性  
         request.setAttribute(failureKeyAttribute, "jCaptcha.error");  
 		
+        // 正常使用验证码验证时这里应该设为false
 //		return false;
 		return true;
 	}

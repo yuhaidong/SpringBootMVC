@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>登录界面2</title>
+    <title>登录界面</title>
 
 <script type="text/javascript"   th:src="@{/js/jquery-3.3.1.js}"></script>    
 <script type="text/javascript">
@@ -68,8 +68,14 @@
 
 </head>
 <body>
-<div th:if="${error != null}">
-验证失败，请重新登录！
+<div th:if="${error} == 'org.apache.shiro.authc.IncorrectCredentialsException'">
+	<div>用户名或密码错误！</div>
+</div>
+<div th:if="${error} == 'org.apache.shiro.authc.UnknownAccountException'">
+	<div>用户名或密码错误！</div>
+</div>
+<div th:if="${error} == 'com.yhd.yhdblog.common.exception.CaptchaErrorException'">
+	<div>验证码错误！</div>
 </div>
 
 <form action="/login" method="post">

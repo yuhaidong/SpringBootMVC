@@ -24,30 +24,13 @@ public class SBShiroConfig {
 	
 	/**
 	 * 非常重要！
-	 * 这里要注意，shiro处理filter是有顺序的，先定义的先处理，后定义的后处理
-	 * 比如：
-	 * 1	如果代码中有2个关于filter的设置，顺序是先设置所有url都可以匿名访问，后设置自定义的filter，即：
-	 * 			条件1：filterChainDefinitionMap.put("/**", "anon");
-	 * 			条件2：filterChainDefinitionMap.put("/login", "customFormAuthenticationFilter");
-	 * 		这里有个特点：
-	 * 			条件2包含的自定义filter
-	 * 		是被包含在：
-	 * 			条件1对应的默认filter
-	 * 		之内的，如果想让：
-	 * 			条件2包含的自定义filter
-	 * 		被执行，应该让系统按照：
-	 * 			条件2包含的自定义filter --> 条件1对应的默认filter
-	 * 		所以注意！如果按照上面的设置：
-	 * 			条件1 --> 条件2
-	 * 		这种顺序来设置，当在浏览器中执行“/login”这个url的时候，是不会经过“条件2”这个自定义的filter的，
-	 * 		因为在执行filter的时候，会遵循“最近匹配原则”去匹配url对应的filter，
 	 * 
-	 * 				if(满足“条件1”对应的url)
-	 * 					执行“条件1”对应的filter
-	 * 				else if(满足“条件2”对应的url)
-	 * 					执行“条件2”对应的filter
-	 * 				...
-	 * 		以此类推，执行到“条件1”对应的filter，所有filter就结束了！所以一定要注意这里的设置顺序！
+	 * 类似于在shiro-context.xml文件中对shiro进行配置，这里需要设置2个地方：
+	 * 
+	 *		设置1：设置自定义filters拦截器
+	 *		设置2：设置filterChainDefinitions拦截器
+	 * 
+	 * 特别是设置2进行filterChainDefinitions拦截器设置的时候，一定要注意顺序，一般将“/**”设置在最后，表示所有访问的默认设置
 	 * 
 	 * @param securityManager
 	 * @return
@@ -58,14 +41,14 @@ public class SBShiroConfig {
 		
 		// 创建shiro的Bean
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-		// 必须设置 SecurityManager
+		// 必须设置SecurityManager
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
 		shiroFilterFactoryBean.setLoginUrl("/login");
 		// 登录成功后要跳转的链接
 		shiroFilterFactoryBean.setSuccessUrl("/index");
-		
+		// 错误页面
 		shiroFilterFactoryBean.setUnauthorizedUrl("/403");
 		
 		/**
@@ -93,9 +76,13 @@ public class SBShiroConfig {
 		 */
 		Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
 		
+		// 不拦截css
 		filterChainDefinitionMap.put("/css/**", "anon");
+		// 不拦截img
         filterChainDefinitionMap.put("/img/**", "anon");
+        // 不拦截js
         filterChainDefinitionMap.put("/js/**", "anon");
+        // 不拦截二维码图片显示请求
 		filterChainDefinitionMap.put("/captchaImage", "anon");
 		// login时拦截执行二维码验证，用户名密码验证
 		filterChainDefinitionMap.put("/login", "captchaValidateFilter, authc");
