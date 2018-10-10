@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.yhd.project.springbootmvc.common.util.VerifyCodeUtils;
+import com.yhd.project.springbootmvc.common.util.CaptchaVerifyCodeUtils;
 
 /**
  * 类名称：AuthImageController.java 
@@ -26,9 +26,10 @@ import com.yhd.project.springbootmvc.common.util.VerifyCodeUtils;
  * @author yhd
  */
 @Controller
-public class AuthImageController {
+public class CaptchaImageController {
 
-	@RequestMapping(value = "/authImage", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	//@RequestMapping(value = "/captchaImage", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/captchaImage", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String AuthImage(HttpServletRequest request, HttpServletResponse response, ModelMap model)
 			throws ServletException, IOException {
@@ -38,7 +39,7 @@ public class AuthImageController {
 		response.setContentType("image/jpeg");
 
 		// 生成随机字串
-		String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
+		String verifyCode = CaptchaVerifyCodeUtils.generateVerifyCode(4);
 		System.out.println("随机生成的验证码为：" + verifyCode);
 		// 存入会话session
 		HttpSession session = request.getSession(true);
@@ -53,7 +54,7 @@ public class AuthImageController {
 
 		// 生成图片
 		int w = 100, h = 28;
-		String base64 = VerifyCodeUtils.outputImageBase64(w, h, verifyCode);
+		String base64 = CaptchaVerifyCodeUtils.outputImageBase64(w, h, verifyCode);
 		System.out.println(base64);
 		return base64;
 	}

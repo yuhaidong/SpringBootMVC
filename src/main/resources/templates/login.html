@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>登录界面</title>
-    
+    <title>登录界面2</title>
+
 <script type="text/javascript"   th:src="@{/js/jquery-3.3.1.js}"></script>    
 <script type="text/javascript">
 
@@ -17,93 +17,52 @@
 		if(!$("#password").val()) {
 			alert("请输入密码");
 			return false;
-		}
-		
+		}	
 	}
 	
-	function authImage(){
-        $.ajax({
-            url:"/flxoa/authImage",
-            type:"post",
-            success:function(data){
-                console.info(data);
-                $("#imgObj").attr('src',data);
-            }
-        });
-    }
-	
-	function captcha() {
+	// 生成验证码图片
+	function captchaImage() {
+		// 验证码所在的标签
+ 	    //var imgSrc = $("#imgObj");
+		//var imgSrc2= $("#imgObj");
+		// 验证码请求命令
+ 	    var src = "/captchaImage";
+ 	    // 验证码完整请求命令
+		var url2 = chgUrl(src);
 		
-		$("imgObj").src = "/captcha_view";
-		/* $.ajax({
- 	        type: "POST",
- 	        url: "/captcha_view"
-		}); */
- 	}
-
-	// 重新生成验证码图片
-	function changeImg2() {
-		// 找到验证码所在的标签
- 	    var imgSrc = $("#imgObj");
-		// 找到生成验证码的访问请求对应的request命令
- 	    var src = imgSrc.attr("src");
-		// 设置src元素的属性值
- 	    imgSrc.attr("src",chgUrl(src));
+		// POST命令生成验证码
+		$.ajax({
+		      url: url2,
+		      type: "post",
+		      success: function(data) {
+		    	  console.info(data);
+		    	  $("#imgObj").attr('src',data);
+		      }
+		});
+		
  	}
 	
-	function changeImg() {
-		
-		// 找到验证码所在的标签
- 	    var imgSrc = $("#imgObj");
-		// 找到生成验证码的访问请求对应的request命令
- 	    //var src = imgSrc.attr("src");
- 	    //var src = "/captcha_view";
- 	    var src = "/authImage";
- 	    
-		// 设置src元素的属性值
- 	    //imgSrc.attr("src",chgUrl(src));
-		
-		url = chgUrl(src);
- 	   
-		
- 	   
- 	  $.ajax({
-          url:url,
-          type:"post",
-          success:function(data){
-        	  console.info(data);
-        	  $("#imgObj").attr('src',data);
-          }
-      });
-		
- 	  /*  $.ajax({
-           url:url,
-           type:"post",
-           success:function(data){
-               console.info(data);
-               $("#imgObj").attr('src',data);
-           }
-       }); */
- 	}
-	
- 	//将时间戳附在请求命令中。这是为了使每次生成图片不一致，即不让浏览器读缓存，所以需要加上时间戳     
+ 	// 将时间戳附在请求命令中。这是为了使每次生成图片不一致，即不让浏览器读缓存，所以需要加上时间戳     
  	function chgUrl(url){     
  	    // 时间戳
  		var timestamp = (new Date()).valueOf();     
  	    // 后缀
-		postfix = "?timestamp=" + timestamp;
+		var postfix = "?timestamp=" + timestamp;
+ 	    // 带后缀的url
+ 	    var urlWithPostfix = "";
+ 	    
 		// 判断是否还没有后缀
 		if(url.indexOf('?') == -1) {
-			urlurl = url + postfix;
+			urlWithPostfix = url + postfix;
 		} else {
-			
-			urlurl = url.substring(0, url.indexOf('?')) + postfix;
+			urlWithPostfix = url.substring(0, url.indexOf('?')) + postfix;
 		}
-		
- 	    return urlurl;
+
+ 	    return urlWithPostfix;
  	}
  	
- 	changeImg();
+ 	// 页面展示时生成二维码图片
+ 	captchaImage();
     	
 </script>
 
@@ -113,12 +72,12 @@
 验证失败，请重新登录！
 </div>
 
-<form action="login" method="post">
+<form action="/login" method="post">
     <p>账号：<input type="text" name="username" value="j"/></p>
     <p>密码：<input type="text" name="password" value="1"/></p>
     <p>
     	验证码：<input id="captcha" name="captcha" type="text" maxlength="32" class="input" />
-    	<img id="imgObj"  alt="" src="" onclick="changeImg()"/>
+    	<img id="imgObj"  alt="" src="" onclick="return captchaImage()"/>
     </p>
     <p><input type="submit" value="登录"/></p>
 </form>

@@ -8,21 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 //@RestController
 @Controller
@@ -48,6 +38,7 @@ public class LoginController {
 	 * @return
 	 * @throws IOException
 	 */
+	//@ResponseBody()
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String submit(HttpServletRequest request,
 			HttpServletResponse response, ModelMap model) throws IOException {
@@ -61,6 +52,14 @@ public class LoginController {
 		
 		return "login";
 	}
+	
+	@RequestMapping("/403")
+    public String hello2(Model model) {
+
+		model.addAttribute("name", "张三");
+		
+        return "403";
+    }
 	
 	@RequestMapping("/hello")
     public String hello(Model model) {

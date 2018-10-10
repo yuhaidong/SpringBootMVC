@@ -21,7 +21,37 @@ import com.yhd.project.springbootmvc.common.filter.CustomFormAuthenticationFilte
 
 @Configuration
 public class SBShiroConfig {
-
+	
+	/**
+	 * 非常重要！
+	 * 这里要注意，shiro处理filter是有顺序的，先定义的先处理，后定义的后处理
+	 * 比如：
+	 * 1	如果代码中有2个关于filter的设置，顺序是先设置所有url都可以匿名访问，后设置自定义的filter，即：
+	 * 			条件1：filterChainDefinitionMap.put("/**", "anon");
+	 * 			条件2：filterChainDefinitionMap.put("/login", "customFormAuthenticationFilter");
+	 * 		这里有个特点：
+	 * 			条件2包含的自定义filter
+	 * 		是被包含在：
+	 * 			条件1对应的默认filter
+	 * 		之内的，如果想让：
+	 * 			条件2包含的自定义filter
+	 * 		被执行，应该让系统按照：
+	 * 			条件2包含的自定义filter --> 条件1对应的默认filter
+	 * 		所以注意！如果按照上面的设置：
+	 * 			条件1 --> 条件2
+	 * 		这种顺序来设置，当在浏览器中执行“/login”这个url的时候，是不会经过“条件2”这个自定义的filter的，
+	 * 		因为在执行filter的时候，会遵循“最近匹配原则”去匹配url对应的filter，
+	 * 
+	 * 				if(满足“条件1”对应的url)
+	 * 					执行“条件1”对应的filter
+	 * 				else if(满足“条件2”对应的url)
+	 * 					执行“条件2”对应的filter
+	 * 				...
+	 * 		以此类推，执行到“条件1”对应的filter，所有filter就结束了！所以一定要注意这里的设置顺序！
+	 * 
+	 * @param securityManager
+	 * @return
+	 */
 	@Bean
 	public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
 		System.out.println("ShiroConfiguration.shirFilter()");
@@ -31,37 +61,47 @@ public class SBShiroConfig {
 		// 必须设置 SecurityManager
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		
-		// 设置拦截器
-		Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
-		// 配置不会被拦截的链接 顺序判断
-		filterChainDefinitionMap.put("/static/**", "anon");
-		//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
-		filterChainDefinitionMap.put("/logout", "logout");
-		//<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
-		//<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
-		filterChainDefinitionMap.put("/**", "authc");
-		
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
 		shiroFilterFactoryBean.setLoginUrl("/login");
 		// 登录成功后要跳转的链接
 		shiroFilterFactoryBean.setSuccessUrl("/index");
-
-		// 自定义拦截器
+		
+		shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+		
+		/**
+		 * 1.设置自定义filters拦截器
+		 */
 		Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
-		// 登录权限验证拦截器
-		filtersMap.put("customFormAuthenticationFilter", new CustomFormAuthenticationFilter());
+		
+		// 登录权限验证拦截器。注意这里设置成authc，user，logout使用的拦截器都是CustomFormAuthenticationFilter()
+		filtersMap.put("authc", new CustomFormAuthenticationFilter());
+		filtersMap.put("user", new CustomFormAuthenticationFilter());
+		filtersMap.put("logout", new CustomFormAuthenticationFilter());
 		// 二维码验证拦截器
 		filtersMap.put("captchaValidateFilter", new CaptchaValidateFilter());
 		// 将自定义拦截器加入到shiro的Bean中
 		shiroFilterFactoryBean.setFilters(filtersMap);
 		
-		// 将登录权限验证拦截器设置进shiro的filterchain中。必须设置！否则filter不会生效！
-		filterChainDefinitionMap.put("/**", "customFormAuthenticationFilter");
-		// 将二维码验证拦截器设置进shiro的filterchain中，必须设置！否则filter不会生效！
-		filterChainDefinitionMap.put("/**", "captchaValidateFilter");
-
-		//未授权界面;
-		shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+		// 
+		/**
+		 * 2.设置filterChainDefinitions拦截器
+		 * 
+		 * 过滤链定义，从上向下顺序执行，一般将/**放在最为下边。
+		 * authc:	所有url都必须认证通过才可以访问
+		 * anon:	所有url都都可以匿名访问
+		 * 
+		 */
+		Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
+		
+		filterChainDefinitionMap.put("/css/**", "anon");
+        filterChainDefinitionMap.put("/img/**", "anon");
+        filterChainDefinitionMap.put("/js/**", "anon");
+		filterChainDefinitionMap.put("/captchaImage", "anon");
+		// login时拦截执行二维码验证，用户名密码验证
+		filterChainDefinitionMap.put("/login", "captchaValidateFilter, authc");
+		// 所有访问默认都要被拦截检查
+		filterChainDefinitionMap.put("/**", "user");
+		
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		
 		return shiroFilterFactoryBean;
